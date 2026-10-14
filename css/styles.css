@@ -100,3 +100,42 @@ button:focus-visible {
 input[aria-invalid="true"] {
     border: 3px solid #a30000;
 }
+
+/* Results: only shows up when it has content */
+#results:not(:empty) {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #767676;
+    border-radius: 0.5rem;
+}
+
+#results h2 {
+    margin-top: 0;
+}
+
+#results .verdict {
+  font-weight: bold;
+}
+
+#results dl {
+  margin: 0;
+}
+
+#results dt {
+  font-weight: bold;
+  margin-top: 0.75rem;
+}
+
+#results dd {
+  margin: 0;
+}
+
+#results .value {
+  font-size: 1.25rem;
+}
+
+#results .explain {
+  color: #444;
+  font-size: 0.9rem;
+}

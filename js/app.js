@@ -19,6 +19,32 @@ function estimatePossessions(fga, oreb, tov, fta) {
   return fga - oreb + tov + 0.44 * fta;
 }
 
+// Points scored per 100 possessions. Used for both offensive rating
+// (your points / your possessions) and defensive rating
+// (opponent's points / opponent's possessions)
+function pointsPer100(points, possessions) {
+    return 100 * points / possessions;
+}
+
+// Takes two validated stat objects and returns every calculated result.
+// It never touches the page, so it's easy to test and resuse.
+function calculateGame(team, opp) {
+    const teamPoss = estimatePossessions(team.fga, team.oreb, team.tov, team.fta);
+    const oppPoss = estimatePossessions(opp.fga, opp.oreb, opp.tov, opp.fta);
+
+    const ortg = pointsPer100(team.pts, teamPoss);
+    const drtg = pointsPer100(opp.pts, oppPoss);
+
+  return {
+    teamPoss: teamPoss,
+    oppPoss: oppPoss,
+    ortg: ortg,
+    drtg: drtg,
+    net: ortg - drtg,
+    pace: (teamPoss + oppPoss) / 2  // average of both teams, per game
+  };
+}
+
 // ---------- Reading and validating ----------
 // Read one team's fields as raw text (NOT converted yet), so we can
 // tell the difference between a blank field and a real 0.
@@ -102,12 +128,82 @@ function showErrors(errors) {
   document.getElementById(errors[0].id).focus();
 }
 
+// ---------- Showing results ----------
+const resultsArea = document.getElementById('results');
+
+// Put a "+" in front of positive numbers: 4.0 becomes "+4.0".
+function formatSigned(n) {
+  const text = n.toFixed(1);
+  return n > 0 ? '+' + text : text;
+}
+
+// Add one term/definition pair (label, big number, plain-words explanation).
+function addResult(list, label, value, explanation) {
+  const term = document.createElement('dt');
+  term.textContent = label;
+
+  const detail = document.createElement('dd');
+  const big = document.createElement('div');
+  big.className = 'value';
+  big.textContent = value;
+  const note = document.createElement('div');
+  note.className = 'explain';
+  note.textContent = explanation;
+  detail.appendChild(big);
+  detail.appendChild(note);
+
+  list.appendChild(term);
+  list.appendChild(detail);
+}
+
+function clearResults() {
+  resultsArea.textContent = '';
+}
+
+function renderResults(game) {
+  clearResults();
+
+  const heading = document.createElement('h2');
+  heading.textContent = 'Results';
+
+  // A sentence, so the result never depends on color or a sign alone.
+  const verdict = document.createElement('p');
+  verdict.className = 'verdict';
+  const margin = Math.abs(game.net).toFixed(1);
+  if (game.net > 0) {
+    verdict.textContent = 'Your team was ' + margin + ' points better per 100 possessions.';
+  } else if (game.net < 0) {
+    verdict.textContent = 'Your team was ' + margin + ' points worse per 100 possessions.';
+  } else {
+    verdict.textContent = 'Both teams were equally efficient per 100 possessions.';
+  }
+
+  const list = document.createElement('dl');
+  addResult(list, 'Your possessions', game.teamPoss.toFixed(1),
+    'About how many times your team had the ball.');
+  addResult(list, 'Opponent possessions', game.oppPoss.toFixed(1),
+    'About how many times the opponent had the ball.');
+  addResult(list, 'Offensive rating', game.ortg.toFixed(1),
+    'Points your team scored per 100 possessions.');
+  addResult(list, 'Defensive rating', game.drtg.toFixed(1),
+    'Points your team allowed per 100 possessions. Lower is better.');
+  addResult(list, 'Net rating', formatSigned(game.net),
+    'Offensive rating minus defensive rating. Above 0 means you outplayed them.');
+  addResult(list, 'Pace', game.pace.toFixed(1),
+    'Average possessions per team in this game.');
+
+  resultsArea.appendChild(heading);
+  resultsArea.appendChild(verdict);
+  resultsArea.appendChild(list);
+}
+
 // ---------- Form handling ----------
 const form = document.getElementById('game-form');
 
 form.addEventListener('submit', function (event) {
   event.preventDefault();
   clearErrors();
+  clearResults();
 
   const raw = {};
   let errors = [];
@@ -136,6 +232,5 @@ form.addEventListener('submit', function (event) {
     return;
   }
 
-  console.log('Your team possessions:', teamPoss.toFixed(2));
-  console.log('Opponent possessions:', oppPoss.toFixed(2));
+  renderResults(calculateGame(team, opp));
 });
