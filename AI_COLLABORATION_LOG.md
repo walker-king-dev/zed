@@ -1,0 +1,1 @@
+I was getting errors in the console after the first test. I had app.js instead of js/app.js and styles.css instead of css/styles.css
