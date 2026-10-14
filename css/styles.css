@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #f5f5f5;
+    margin: 0;
+}
+
+main {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.subtitle {
+    margin-top: 0;
+    color: #444;
+}
+
+.teams {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 40rem) {
+    .teams {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+fieldset {
+    background: #fff;
+    border: 1px solid #767676;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 0.5rem;
+}
+
+label {
+    display: block;
+    margin-top: 0.75rem;
+}
+
+input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #767676;
+    border-radius: 0.25rem;
+}
+
+button {
+    margin-top: 1rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    color: #fff;
+    background: #1a4fa0;
+    border: 2px solid #1a4fa0;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+/* Visible keyboard focus on every interactive element */
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid #b35900;
+    outline-offset: 2px;
+}
