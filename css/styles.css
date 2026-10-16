@@ -3,11 +3,22 @@
 }
 
 body {
-    font-family: system-ui, sans-serif;
-    line-height: 1.5;
-    color: #1a1a1a;
-    background: #f5f5f5;
-    margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  margin: 0;
+  /* Hardwood: faint plank seams over a warm gradient */
+  background-color: #ecd5a8;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(120, 75, 30, 0.08) 0,
+      rgba(120, 75, 30, 0.08) 2px,
+      transparent 2px,
+      transparent 5rem
+    ),
+    linear-gradient(180deg, #f8ecd3, #ecd5a8);
+  background-attachment: fixed;
 }
 
 main {
@@ -138,4 +149,36 @@ input[aria-invalid="true"] {
 #results .explain {
   color: #444;
   font-size: 0.9rem;
+}
+
+/* Header band */
+.site-header {
+  padding: 1.25rem 1rem;
+  background: #14213d;
+  color: #fff;
+  border-bottom: 6px solid #e07a1f;
+}
+
+.site-header > * {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.site-header h1 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+.site-header .subtitle {
+  margin-bottom: 0;
+  color: #e8ecf5;
+}
+
+/* Orange accent on the cards, plus a soft shadow */
+fieldset,
+#results:not(:empty),
+#saved-list li {
+  border-top: 4px solid #e07a1f;
+  box-shadow: 0 2px 6px rgba(20, 33, 61, 0.15);
 }
